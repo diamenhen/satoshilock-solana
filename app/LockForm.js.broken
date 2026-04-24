@@ -1093,8 +1093,8 @@ function LockLogo({ size=28 }) {
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
       <defs>
         <linearGradient id="lockG" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#7dd3ff" />
-          <stop offset="1" stopColor="#c2f160" />
+          <stop offset="0" stopColor="#F4A460" />
+          <stop offset="1" stopColor="#E87B3E" />
         </linearGradient>
       </defs>
       {/* Track ring — subtle, blends with dark bg */}
@@ -1428,15 +1428,15 @@ const COLORS = {
   cardBgElevated:  '#1C2235',
   border:          '#2A334A',
   borderLite:      '#232B42',
-  borderSubtle:    '#1A2030',
+  borderSubtle:    '#16181E',
 
   text:            '#F0F4FC',
   textDim:         '#A0AAC2',
-  textMute:        '#6B7590',
+  textMute:        '#6B6F78',
 
-  accent:          '#C2F160',
-  accentDark:      '#A8D850',
-  accentBg:        'rgba(194,241,96,0.12)',
+  accent:          '#E87B3E',
+  accentDark:      '#C4884A',
+  accentBg:        'rgba(232, 123, 62,0.12)',
 
   mint:            '#86EFAC',
   mintBg:          'rgba(134,239,172,0.10)',
@@ -1514,7 +1514,7 @@ const S = {
 
   addAnother: { background:'none', border:'none', color:COLORS.accent, fontSize:12, fontWeight:600, padding:'16px 0', cursor:'pointer', fontFamily:'inherit' },
 
-  primaryCta: { width:'100%', background:`linear-gradient(180deg, ${COLORS.accent}, ${COLORS.accentDark})`, border:'none', borderRadius:8, padding:'13px 20px', color:COLORS.bg, fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'inherit', display:'flex', alignItems:'center', justifyContent:'center', gap:8, boxShadow:`0 0 24px rgba(194,241,96,0.14)`, transition:'all 0.15s' },
+  primaryCta: { width:'100%', background:`linear-gradient(180deg, ${COLORS.accent}, ${COLORS.accentDark})`, border:'none', borderRadius:8, padding:'13px 20px', color:COLORS.bg, fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'inherit', display:'flex', alignItems:'center', justifyContent:'center', gap:8, boxShadow:`0 0 24px rgba(232, 123, 62,0.14)`, transition:'all 0.15s' },
   primaryCtaDisabled: { background:COLORS.cardBgElevated, color:COLORS.textMute, cursor:'not-allowed', boxShadow:'none' },
   spinner: { width:12, height:12, border:'2px solid rgba(0,0,0,0.3)', borderTopColor:COLORS.bg, borderRadius:'50%', animation:'spin 0.7s linear infinite' },
 
