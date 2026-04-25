@@ -808,7 +808,7 @@ export default function LockForm() {
       )}
 
       <div style={S.main}>
-        {tab==='about'  && <AboutPanel onCreate={()=>setTab('create')} />}
+        {tab==='about'  && <AboutPanel onCreate={()=>setTab('create')} onLocked={()=>setTab('locked')} />}
         {tab==='locked' && <LocksTable title="Your locked tokens" rows={receivedStreams} getStats={getStreamStats} onClaim={claimTokens} claimLoading={claimLoading} role="recipient" publicKey={publicKey} onCreate={()=>setTab('create')} now={now} onRefresh={refreshOnChainLocks} refreshing={onChainLoading} />}
         {tab==='streams'&& <LocksTable title="Locks you created"  rows={createdStreams}  getStats={getStreamStats} onClaim={claimTokens} claimLoading={claimLoading} role="creator"   publicKey={publicKey} onCreate={()=>setTab('create')} now={now} onRefresh={refreshOnChainLocks} refreshing={onChainLoading} />}
 
@@ -1205,25 +1205,50 @@ function Fonts() {
   );
 }
 
-function AboutPanel({ onCreate }) {
+function AboutPanel({ onCreate, onLocked }) {
   return (
-    <div style={{width:'100%',maxWidth:560,textAlign:'center',padding:'3rem 1rem 5rem'}}>
-      <div style={{display:'inline-block',position:'relative',marginBottom:18}}>
-        <div style={{position:'absolute',inset:-20,background:COLORS.accent,opacity:0.08,borderRadius:'50%',filter:'blur(30px)',pointerEvents:'none'}}/>
-        <div style={{position:'relative'}}><LockLogo size={96} /></div>
-      </div>
-      <div style={{fontFamily:'"Arial Black", Inter, sans-serif',fontSize:48,fontWeight:900,letterSpacing:'-0.04em',color:COLORS.text,marginBottom:6,textTransform:'uppercase'}}>SATOSHI<span style={{color:'#E87B3E',fontStyle:'italic'}}>LOCK</span></div>
-      <div style={{fontSize:14,color:COLORS.textDim,lineHeight:1.65,marginBottom:24,maxWidth:440,margin:'0 auto 24px'}}>
-        Onchain token vesting on Solana. Forged for those who demand finality.
+    <div style={{position:'relative',width:'100%',maxWidth:920,padding:'4rem 1rem 3rem',textAlign:'center'}}>
+      {/* Corner brackets */}
+      <div style={{position:'absolute',top:24,left:24,width:28,height:28,borderTop:'3px solid #E87B3E',borderLeft:'3px solid #E87B3E'}} aria-hidden />
+      <div style={{position:'absolute',top:24,right:24,width:28,height:28,borderTop:'3px solid #E87B3E',borderRight:'3px solid #E87B3E'}} aria-hidden />
+      <div style={{position:'absolute',bottom:24,left:24,width:28,height:28,borderBottom:'3px solid #E87B3E',borderLeft:'3px solid #E87B3E'}} aria-hidden />
+      <div style={{position:'absolute',bottom:24,right:24,width:28,height:28,borderBottom:'3px solid #E87B3E',borderRight:'3px solid #E87B3E'}} aria-hidden />
+
+      {/* Version ID */}
+      <div style={{fontFamily:'"JetBrains Mono", Consolas, monospace',fontSize:11,color:'#E87B3E',letterSpacing:'0.25em',marginBottom:24}}>
+        SLK://SOLANA/MAINNET/LIVE
       </div>
 
-      <div style={{display:'flex',justifyContent:'center',gap:8,marginBottom:28,flexWrap:'wrap'}}>
-        <FeatureChip dot={COLORS.mint}  label="On-chain escrow" />
-        <FeatureChip dot={COLORS.cyan}  label="Audited" />
-        <FeatureChip dot={COLORS.amber} label="Zero platform fees" />
+      {/* Lock icon */}
+      <div style={{display:'inline-block',filter:'drop-shadow(0 0 50px rgba(125,211,252,0.3))',marginBottom:32}}>
+        <LockLogo size={72} />
       </div>
 
-      <button style={{...S.primaryCta, width:'auto', padding:'11px 26px', margin:'0 auto'}} onClick={onCreate}>DEPLOY LOCK</button>
+      {/* Heading */}
+      <h1 style={{fontSize:'clamp(42px, 7vw, 80px)',fontWeight:800,letterSpacing:'-0.03em',lineHeight:1.04,margin:'0 0 22px'}}>
+        <span style={{background:'linear-gradient(135deg, #F4A460 0%, #E87B3E 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'}}>Token vesting,</span>
+        <br />done right.
+      </h1>
+
+      {/* Subtitle */}
+      <p style={{fontSize:17,color:COLORS.textDim,lineHeight:1.6,maxWidth:580,margin:'0 auto 40px'}}>
+        Token vesting on Solana. Native SOL and any SPL token.
+        Immutable, non-custodial, open source. Zero protocol fees.
+      </p>
+
+      {/* CTA Row */}
+      <div style={{display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap'}}>
+        <button
+          onClick={onCreate}
+          style={{borderRadius:0,textTransform:'uppercase',letterSpacing:'0.12em',fontFamily:'"JetBrains Mono", Consolas, monospace',padding:'14px 30px',fontSize:15,fontWeight:700,background:'linear-gradient(180deg, #E87B3E, #C4884A)',color:'#0B0E17',border:'none',cursor:'pointer',boxShadow:'0 0 28px rgba(232,123,62,0.22)'}}>
+          Create Lock
+        </button>
+        <button
+          onClick={onLocked}
+          style={{borderRadius:0,textTransform:'uppercase',letterSpacing:'0.12em',fontFamily:'"JetBrains Mono", Consolas, monospace',padding:'14px 30px',fontSize:15,fontWeight:600,background:'transparent',color:COLORS.text,border:`1px solid ${COLORS.border}`,cursor:'pointer'}}>
+          My Locks
+        </button>
+      </div>
     </div>
   );
 }
