@@ -1097,7 +1097,7 @@ function LockLogo({ size=28 }) {
 function MonogramS({ size=28 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-      <rect x="2" y="2" width="28" height="28" stroke="#E87B3E" strokeWidth="2.2" fill="none"/>
+      <rect x="2" y="2" width="28" height="28" rx="6" stroke="#E87B3E" strokeWidth="2.2" fill="none"/>
       <text x="16" y="24" textAnchor="middle" fontFamily='"Arial Black", sans-serif' fontSize="22" fontWeight="900" fontStyle="italic" fill="#E87B3E">S</text>
     </svg>
   );
