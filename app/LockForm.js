@@ -1269,113 +1269,126 @@ function ProgressRing({ pct, color, size=54 }) {
   );
 }
 
-function LockCard({ st, stats, role, index, publicKey, onClaim, claimLoading, now }) {
-  const { vested, claimable, pctUnlocked, pctClaimed, isLive, isDone, nextUnlock } = stats;
-  const isClaiming = claimLoading[index];
-  const hasClaimable = claimable > 0.000001 && pctUnlocked > pctClaimed + 0.001;
-  const canClaim = publicKey && st.recipient === publicKey.toString() && st.mintAddress;
-
-  // Status badge: done > cliff-soon > live > upcoming
-  let badge = null;
-  if (isDone) badge = { label: 'Complete',   color: COLORS.mint,  bg: COLORS.mintBg };
-  else if (!isLive && st.cliffTs) {
-    const untilCliff = st.cliffTs - now;
-    if (untilCliff < 86400 * 3 && untilCliff > 0) badge = { label: 'Cliff soon', color: COLORS.amber, bg: COLORS.amberBg };
-    else                                          badge = { label: 'Upcoming',   color: COLORS.cyan,  bg: COLORS.cyanBg };
-  }
-  else if (isLive && !isDone) badge = { label: 'Vesting', color: COLORS.accent, bg: COLORS.accentBg };
-
-  const ringColor = isDone ? COLORS.mint : isLive ? COLORS.accent : COLORS.cyan;
-
-  const freqLabel = DUR_UNITS.find(u=>u.value===st.freqUnit)?.label?.toLowerCase() || 'period';
-
+function DetailItem({ label, value, copyValue, highlight }) {
   return (
-    <div style={S.lockCard}>
-      <div style={{display:'flex',gap:16,alignItems:'center',flexWrap:'wrap'}}>
-        <div style={{position:'relative',width:54,height:54,flexShrink:0}}>
-          {isDone ? (
-            <>
-              <svg width="54" height="54" viewBox="0 0 54 54">
-                <circle cx="27" cy="27" r="23" fill="none" stroke={COLORS.mint} strokeWidth="4"/>
-              </svg>
-              <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={COLORS.mint} strokeWidth="3"><path d="M20 6 9 17l-5-5"/></svg>
-              </div>
-            </>
-          ) : (
-            <>
-              <ProgressRing pct={pctUnlocked} color={ringColor}/>
-              <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,color:ringColor}} className="tabular">
-                {Math.round(pctUnlocked)}%
-              </div>
-            </>
-          )}
-        </div>
-
-        <div style={{flex:1,minWidth:200}}>
-          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6,flexWrap:'wrap'}}>
-            <div style={{fontSize:14,fontWeight:700,color:COLORS.text}}>{st.title || 'Untitled lock'}</div>
-            {badge && (
-              <span style={{fontSize:11,color:badge.color,background:badge.bg,padding:'2px 9px',borderRadius:999,fontWeight:600}}>
-                {badge.label}
-              </span>
-            )}
-            <div style={{fontSize:11,color:COLORS.textMute,fontFamily:'monospace',display:'flex',alignItems:'center',gap:4}}>
-              {role==='creator' ? `→ ${shortAddr(st.recipient)}` : `from ${shortAddr(st.sender)}`}
-              <CopyIcon size={10} onClick={(e)=>{e.stopPropagation(); navigator.clipboard?.writeText(role==='creator'?st.recipient:st.sender);}} />
-            </div>
-          </div>
-          <div style={{display:'flex',alignItems:'baseline',gap:6,marginBottom:10}}>
-            <span className="tabular" style={{fontSize:22,fontWeight:700,color:COLORS.text,letterSpacing:'-0.01em'}}>
-              {numFmt(vested)}
-            </span>
-            <span style={{fontSize:12,color:COLORS.textDim}}>of {numFmt(st.amt)} {st.token}</span>
-          </div>
-          <div style={{height:6,background:COLORS.progressTrack,borderRadius:999,overflow:'hidden',marginBottom:8}}>
-            <div style={{height:'100%',width:Math.min(100,pctUnlocked)+'%',background:ringColor,borderRadius:999,transition:'width 0.5s ease'}}/>
-          </div>
-          <div style={{display:'flex',gap:14,fontSize:11,color:COLORS.textDim,flexWrap:'wrap'}}>
-            {isDone ? (
-              <span><span style={{color:COLORS.textMute}}>End</span> {fmtDateShort(st.endTs)}</span>
-            ) : nextUnlock ? (
-              <span><span style={{color:COLORS.textMute}}>Next unlock</span> <span className="tabular">{fmtRelative(nextUnlock - now)}</span></span>
-            ) : !isLive && st.cliffTs ? (
-              <span><span style={{color:COLORS.textMute}}>Cliff</span> <span className="tabular">{fmtRelative(st.cliffTs - now)}</span></span>
-            ) : null}
-            {st.freqValue && !isDone && (
-              <span><span style={{color:COLORS.textMute}}>Every</span> {st.freqValue} {freqLabel}{st.freqValue>1?'s':''}</span>
-            )}
-            {!isDone && st.endTs && (
-              <span><span style={{color:COLORS.textMute}}>End</span> {fmtDateShort(st.endTs)}</span>
-            )}
-            {st.cliffAmount>0 && !isDone && (
-              <span><span style={{color:COLORS.textMute}}>Cliff amt</span> {numFmt(st.cliffAmount)} {st.token}</span>
-            )}
-          </div>
-        </div>
-
-        <div style={{flexShrink:0}}>
-          {!canClaim ? (
-            <div style={{fontSize:11,color:COLORS.textMute,padding:'8px 12px'}}>View only</div>
-          ) : isDone && !hasClaimable ? (
-            <div style={S.allClaimed}>
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M20 6 9 17l-5-5"/></svg>
-              All claimed
-            </div>
-          ) : (
-            <button
-              style={{...S.claimBtn, ...(hasClaimable?{}:S.claimBtnDisabled)}}
-              onClick={()=>{ if(hasClaimable && !isClaiming) onClaim(st, index); }}
-              disabled={!hasClaimable || isClaiming}>
-              {isClaiming ? '...' : hasClaimable ? `Claim ${numFmt(claimable, claimable >= 1 ? 2 : 6)}` : 'Locked'}
-            </button>
-          )}
-        </div>
+    <div style={{display:'flex',flexDirection:'column',gap:4}}>
+      <div style={{fontSize:10,fontWeight:700,color:COLORS.textMute,textTransform:'uppercase',letterSpacing:'0.06em'}}>{label}</div>
+      <div style={{display:'flex',alignItems:'center',gap:6,fontSize:13,color:highlight ? COLORS.accent : COLORS.text,fontWeight: highlight ? 700 : 500,fontFamily:'monospace'}}>
+        <span style={{whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{value}</span>
+        {copyValue && <CopyIcon size={11} onClick={(e)=>{e.stopPropagation(); navigator.clipboard?.writeText(copyValue);}} />}
       </div>
     </div>
   );
 }
 
+function LockCard({ st, stats, role, index, publicKey, onClaim, claimLoading, now }) {
+  const { vested, claimable, pctUnlocked, pctClaimed, isLive, isDone, nextUnlock } = stats;
+  const isClaiming = claimLoading[index];
+  const hasClaimable = claimable > 0.000001 && pctUnlocked > pctClaimed + 0.001;
+  const canClaim = publicKey && st.recipient === publicKey.toString() && st.mintAddress;
+  const fullyClaimed = isDone && Math.abs((st.withdrawn || 0) - st.amt) < 0.000001 && st.amt > 0;
+  const isNativeSol = st.mintAddress === WSOL_MINT;
+
+  // 4-state status badge
+  let badge = { label: 'Vesting', color: COLORS.accent, bg: COLORS.accentBg, border: 'rgba(232,123,62,0.3)' };
+  if (fullyClaimed || isDone) badge = { label: 'Complete', color: COLORS.textDim, bg: 'rgba(148,163,184,0.12)', border: 'rgba(148,163,184,0.3)' };
+  else if (!isLive && st.cliffTs) {
+    const untilCliff = st.cliffTs - now;
+    if (untilCliff < 86400 * 3 && untilCliff > 0) badge = { label: 'Cliff soon', color: COLORS.amber, bg: COLORS.amberBg, border: 'rgba(252,211,77,0.3)' };
+    else                                          badge = { label: 'Upcoming',   color: COLORS.cyan,  bg: COLORS.cyanBg,  border: 'rgba(125,211,252,0.3)' };
+  }
+
+  const freqSecs = st.freqSecs || (st.endTs - st.startTs);
+  const durSecs  = st.endTs - st.startTs;
+
+  return (
+    <div style={S.lockCardEvm}>
+      {/* Header: title + ID + status */}
+      <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:12,marginBottom:18,flexWrap:'wrap'}}>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:4,flexWrap:'wrap'}}>
+            <div style={{fontSize:18,fontWeight:700,color:COLORS.text}}>{st.title || 'Untitled Lock'}</div>
+            {isNativeSol && <span style={{fontSize:10,fontWeight:700,color:COLORS.accent,background:COLORS.accentBg,padding:'2px 7px',borderRadius:4,letterSpacing:'0.06em'}}>SOL</span>}
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:COLORS.textMute,fontFamily:'monospace'}}>
+            <span>ID {shortAddr(st.lock)}</span>
+            <CopyIcon size={11} onClick={(e)=>{e.stopPropagation(); navigator.clipboard?.writeText(st.lock);}} />
+          </div>
+        </div>
+        <div style={{fontSize:11,fontWeight:700,padding:'4px 12px',borderRadius:999,background:badge.bg,border:`1px solid ${badge.border}`,color:badge.color,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap'}}>{badge.label}</div>
+      </div>
+
+      {/* Amount row */}
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,marginBottom:20,flexWrap:'wrap'}}>
+        <div style={{fontSize:32,fontWeight:700,color:COLORS.text,letterSpacing:'-0.01em'}} className="tabular">
+          {numFmt(st.amt, 4)}
+          <span style={{fontSize:14,color:COLORS.textDim,fontWeight:500,marginLeft:8}}>{st.token}</span>
+        </div>
+        {fullyClaimed && (
+          <div style={{display:'inline-flex',alignItems:'center',gap:5,color:COLORS.accent,fontSize:11,fontWeight:700,background:COLORS.accentBg,border:`1px solid rgba(232,123,62,0.25)`,borderRadius:999,padding:'4px 10px'}}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M20 6 9 17l-5-5"/></svg>
+            All tokens claimed
+          </div>
+        )}
+      </div>
+
+      {/* Progress: UNLOCKED + CLAIMED */}
+      <div style={{marginBottom:20}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:6}}>
+          <span style={{fontSize:11,fontWeight:700,color:COLORS.textMute,textTransform:'uppercase',letterSpacing:'0.06em'}}>Unlocked</span>
+          <span style={{fontSize:12,color:COLORS.text,fontFamily:'monospace'}} className="tabular">{numFmt(vested, 4)} {st.token} · {pctUnlocked.toFixed(2)}%</span>
+        </div>
+        <div style={{height:4,background:COLORS.progressTrack,borderRadius:999,overflow:'hidden',marginBottom:14}}>
+          <div style={{height:'100%',width:Math.min(100,pctUnlocked)+'%',background:COLORS.accent,borderRadius:999,transition:'width 0.5s ease'}}/>
+        </div>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:6}}>
+          <span style={{fontSize:11,fontWeight:700,color:COLORS.textMute,textTransform:'uppercase',letterSpacing:'0.06em'}}>Claimed</span>
+          <span style={{fontSize:12,color:COLORS.text,fontFamily:'monospace'}} className="tabular">{numFmt(st.withdrawn || 0, 4)} {st.token} · {pctClaimed.toFixed(2)}%</span>
+        </div>
+        <div style={{height:4,background:COLORS.progressTrack,borderRadius:999,overflow:'hidden'}}>
+          <div style={{height:'100%',width:Math.min(100,pctClaimed)+'%',background:COLORS.cyan,borderRadius:999,transition:'width 0.5s ease'}}/>
+        </div>
+      </div>
+
+      {/* 10-field detail grid */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(140px, 1fr))',gap:'14px 18px',marginBottom: canClaim ? 20 : 0,paddingTop:18,borderTop:`1px solid ${COLORS.border}`}}>
+        <DetailItem label={role==='creator' ? 'Recipient' : 'Creator'}
+          value={shortAddr(role==='creator' ? st.recipient : st.sender)}
+          copyValue={role==='creator' ? st.recipient : st.sender} />
+        <DetailItem label="Asset"
+          value={isNativeSol ? 'Native SOL' : shortAddr(st.mintAddress)}
+          copyValue={isNativeSol ? null : st.mintAddress} />
+        <DetailItem label="Cliff Date"    value={st.cliffTs ? fmtDate(st.cliffTs) : '\u2014'} />
+        <DetailItem label="Cliff Amount"  value={`${numFmt(st.cliffAmount || 0, 4)} ${st.token}`} />
+        <DetailItem label="Start"         value={fmtDate(st.startTs)} />
+        <DetailItem label="End"           value={fmtDate(st.endTs)} />
+        <DetailItem label="Duration"      value={fmtDur(durSecs)} />
+        <DetailItem label="Frequency"     value={fmtDur(freqSecs)} />
+        <DetailItem label="Next Unlock"   value={isDone ? 'Fully unlocked' : nextUnlock ? fmtDate(nextUnlock) : '\u2014'} />
+        <DetailItem label="Claimable Now" value={`${numFmt(claimable, 6)} ${st.token}`} highlight={hasClaimable} />
+      </div>
+
+      {/* Action row: Claim only (Cancel/Update not implemented in Solana program yet) */}
+      {canClaim && (
+        <div style={{display:'flex',gap:10,marginTop:4}}>
+          {!fullyClaimed ? (
+            <button
+              style={{...S.claimBtn, flex:1, ...(hasClaimable && !isClaiming ? {} : S.claimBtnDisabled)}}
+              onClick={()=>{ if(hasClaimable && !isClaiming) onClaim(st, index); }}
+              disabled={!hasClaimable || isClaiming}>
+              {isClaiming ? '...' : hasClaimable ? `Claim \u00B7 ${numFmt(claimable, 4)} ${st.token}` : 'Locked'}
+            </button>
+          ) : (
+            <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',gap:7,padding:'11px 18px',background:COLORS.accentBg,border:`1px solid rgba(232,123,62,0.25)`,borderRadius:8,color:COLORS.accent,fontSize:13,fontWeight:700}}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M20 6 9 17l-5-5"/></svg>
+              All tokens claimed
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 function LocksTable({ title, rows, getStats, onClaim, claimLoading, role, publicKey, onCreate, now, onRefresh, refreshing }) {
   return (
     <div style={{width:'100%',maxWidth:780}}>
@@ -1564,6 +1577,7 @@ const S = {
 
   // Lock card (replaces old table)
   lockCard: {
+  lockCardEvm: { background: COLORS.cardBg, border: '1px solid ' + COLORS.border, borderRadius: 12, padding: '22px 24px', transition: 'all 0.2s ease' },
     background: COLORS.cardBg,
     border: `1px solid ${COLORS.border}`,
     borderRadius: 12,
