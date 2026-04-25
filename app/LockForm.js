@@ -1192,7 +1192,7 @@ function Fonts() {
 
 function AboutPanel({ onCreate, onLocked, publicKey }) {
   return (
-    <div style={{width:'100%',maxWidth:760,padding:'80px 24px 56px',textAlign:'center',margin:'0 auto'}}>
+    <div style={{width:'100%',maxWidth:760,padding:'80px 24px 24px',textAlign:'center',margin:'0 auto'}}>
 
       {/* Brand mark */}
       <div style={{display:'inline-flex',alignItems:'center',gap:10,marginBottom:14}}>
@@ -1234,7 +1234,7 @@ function AboutPanel({ onCreate, onLocked, publicKey }) {
       </div>
 
       {/* Production contract strip */}
-      <div style={{borderTop:'0.5px solid rgba(255,255,255,0.06)',paddingTop:18,maxWidth:380,margin:'0 auto',textAlign:'left'}}>
+      <div style={{paddingTop:18,maxWidth:380,margin:'0 auto',textAlign:'left'}}>
         <div style={{fontSize:10,color:'#6B6A65',letterSpacing:'0.06em',marginBottom:10}}>Production contract</div>
         <a href="https://solscan.io/account/CE7vQdyjXSEvPdeEdrmbEpM8hSPZi2L4MKAWi26kpZ2H" target="_blank" rel="noopener" style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',fontSize:13,textDecoration:'none'}}>
           <span style={{color:'#E87B3E'}}>Solana mainnet</span>
@@ -1243,7 +1243,7 @@ function AboutPanel({ onCreate, onLocked, publicKey }) {
       </div>
 
       {/* Footer attribution */}
-      <div style={{marginTop:48,paddingTop:18,borderTop:'0.5px solid rgba(255,255,255,0.04)',textAlign:'right',maxWidth:760,margin:'48px auto 0'}}>
+      <div style={{marginTop:48,paddingTop:18,textAlign:'right',maxWidth:380,margin:'48px auto 0'}}>
         <span style={{fontSize:12,color:COLORS.textDim}}>Built by </span>
         <a href="https://x.com/AriantheChain" target="_blank" rel="noopener" style={{fontSize:12,color:'#E87B3E',fontWeight:500,textDecoration:'none'}}>@AriantheChain</a>
       </div>
