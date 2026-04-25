@@ -1527,7 +1527,7 @@ const S = {
     warn:    { borderLeftColor: COLORS.red  },
   },
 
-  main: { width:'100%', flex:1, display:'flex', flexDirection:'column', alignItems:'center', padding:'32px 24px 80px' },
+  main: { width:'100%', display:'flex', flexDirection:'column', alignItems:'center', padding:'32px 24px 80px' },
   pageTitle: { fontSize:22, fontWeight:700, color:COLORS.text, textAlign:'center', marginBottom:28, letterSpacing:'-0.015em' },
 
   // Section header with numbered circle
