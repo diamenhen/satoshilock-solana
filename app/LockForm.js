@@ -793,7 +793,7 @@ export default function LockForm() {
       )}
 
       <div style={S.main}>
-        {tab==='about'  && <AboutPanel onCreate={()=>setTab('create')} onLocked={()=>setTab('locked')} />}
+        {tab==='about'  && <AboutPanel onCreate={()=>setTab('create')} onLocked={()=>setTab('locked')} publicKey={publicKey} />}
         {tab==='locked' && <LocksTable title="Your locked tokens" rows={receivedStreams} getStats={getStreamStats} onClaim={claimTokens} claimLoading={claimLoading} role="recipient" publicKey={publicKey} onCreate={()=>setTab('create')} now={now} onRefresh={refreshOnChainLocks} refreshing={onChainLoading} />}
         {tab==='streams'&& <LocksTable title="Locks you created"  rows={createdStreams}  getStats={getStreamStats} onClaim={claimTokens} claimLoading={claimLoading} role="creator"   publicKey={publicKey} onCreate={()=>setTab('create')} now={now} onRefresh={refreshOnChainLocks} refreshing={onChainLoading} />}
 
@@ -1190,39 +1190,64 @@ function Fonts() {
   );
 }
 
-function AboutPanel({ onCreate, onLocked }) {
+function AboutPanel({ onCreate, onLocked, publicKey }) {
   return (
-    <div style={{position:'relative',width:'100%',maxWidth:920,padding:'4rem 1rem 3rem',textAlign:'center'}}>
-      {/* Corner brackets */}
-      <div style={{position:'absolute',top:24,left:24,width:28,height:28,borderTop:'3px solid #E87B3E',borderLeft:'3px solid #E87B3E'}} aria-hidden />
-      <div style={{position:'absolute',top:24,right:24,width:28,height:28,borderTop:'3px solid #E87B3E',borderRight:'3px solid #E87B3E'}} aria-hidden />
-      <div style={{position:'absolute',bottom:24,left:24,width:28,height:28,borderBottom:'3px solid #E87B3E',borderLeft:'3px solid #E87B3E'}} aria-hidden />
-      <div style={{position:'absolute',bottom:24,right:24,width:28,height:28,borderBottom:'3px solid #E87B3E',borderRight:'3px solid #E87B3E'}} aria-hidden />
-      {/* Heading */}
-      <h1 style={{fontSize:'clamp(42px, 7vw, 80px)',fontWeight:800,letterSpacing:'-0.03em',lineHeight:1.04,margin:'0 0 22px'}}>
-        <span style={{background:'linear-gradient(135deg, #F4A460 0%, #E87B3E 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'}}>Token vesting,</span>
-        <br />done right.
-      </h1>
+    <div style={{width:'100%',maxWidth:760,padding:'80px 24px 56px',textAlign:'center',margin:'0 auto'}}>
+
+      {/* Brand mark */}
+      <div style={{display:'inline-flex',alignItems:'center',gap:10,marginBottom:14}}>
+        <MonogramS size={32} />
+        <span style={{fontSize:24,fontWeight:500,color:COLORS.text,letterSpacing:'-0.01em'}}>SatoshiLock</span>
+      </div>
 
       {/* Subtitle */}
-      <p style={{fontSize:17,color:COLORS.textDim,lineHeight:1.6,maxWidth:580,margin:'0 auto 40px'}}>
+      <p style={{fontSize:15,color:COLORS.textDim,lineHeight:1.5,margin:'0 0 36px',fontWeight:400}}>
         Token vesting on Solana. Native SOL and any SPL token.
-        Immutable, non-custodial, open source. Zero protocol fees.
       </p>
 
       {/* CTA Row */}
-      <div style={{display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap'}}>
+      <div style={{display:'flex',gap:10,justifyContent:'center',marginBottom:40,flexWrap:'wrap'}}>
         <button
           onClick={onCreate}
-          style={{borderRadius:0,textTransform:'uppercase',letterSpacing:'0.12em',fontFamily:'"JetBrains Mono", Consolas, monospace',padding:'14px 30px',fontSize:15,fontWeight:700,background:'linear-gradient(180deg, #E87B3E, #C4884A)',color:'#0B0E17',border:'none',cursor:'pointer',boxShadow:'0 0 28px rgba(232,123,62,0.22)'}}>
-          Create Lock
+          style={{background:'#E87B3E',border:'none',borderRadius:999,padding:'10px 22px',fontSize:13,fontWeight:500,color:'#0B0C10',cursor:'pointer',fontFamily:'inherit'}}>
+          Create lock
         </button>
         <button
           onClick={onLocked}
-          style={{borderRadius:0,textTransform:'uppercase',letterSpacing:'0.12em',fontFamily:'"JetBrains Mono", Consolas, monospace',padding:'14px 30px',fontSize:15,fontWeight:600,background:'transparent',color:COLORS.text,border:`1px solid ${COLORS.border}`,cursor:'pointer'}}>
-          My Locks
+          style={{background:'transparent',border:'0.5px solid rgba(255,255,255,0.15)',borderRadius:999,padding:'10px 22px',fontSize:13,fontWeight:500,color:COLORS.text,cursor:'pointer',fontFamily:'inherit'}}>
+          My locks
         </button>
       </div>
+
+      {/* Stat cards */}
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:380,margin:'0 auto 32px'}}>
+        <div style={{background:'#13141A',borderRadius:12,padding:'14px 12px',textAlign:'left'}}>
+          <div style={{fontSize:10,color:'#6B6A65',letterSpacing:'0.06em',marginBottom:4}}>Network</div>
+          <div style={{fontSize:13,fontWeight:500,color:COLORS.text}}>Solana</div>
+        </div>
+        <div style={{background:'#13141A',borderRadius:12,padding:'14px 12px',textAlign:'left'}}>
+          <div style={{fontSize:10,color:'#6B6A65',letterSpacing:'0.06em',marginBottom:4}}>Wallet</div>
+          <div style={{fontSize:13,fontWeight:500,color:publicKey ? COLORS.text : COLORS.textDim}}>
+            {publicKey ? publicKey.toString().slice(0,4)+'...'+publicKey.toString().slice(-4) : 'Not connected'}
+          </div>
+        </div>
+      </div>
+
+      {/* Production contract strip */}
+      <div style={{borderTop:'0.5px solid rgba(255,255,255,0.06)',paddingTop:18,maxWidth:380,margin:'0 auto',textAlign:'left'}}>
+        <div style={{fontSize:10,color:'#6B6A65',letterSpacing:'0.06em',marginBottom:10}}>Production contract</div>
+        <a href="https://solscan.io/account/CE7vQdyjXSEvPdeEdrmbEpM8hSPZi2L4MKAWi26kpZ2H" target="_blank" rel="noopener" style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',fontSize:13,textDecoration:'none'}}>
+          <span style={{color:'#E87B3E'}}>Solana mainnet</span>
+          <span style={{color:COLORS.textDim,fontFamily:'monospace',fontSize:11}}>CE7v...pZ2H</span>
+        </a>
+      </div>
+
+      {/* Footer attribution */}
+      <div style={{marginTop:48,paddingTop:18,borderTop:'0.5px solid rgba(255,255,255,0.04)',textAlign:'right',maxWidth:760,margin:'48px auto 0'}}>
+        <span style={{fontSize:12,color:COLORS.textDim}}>Built by </span>
+        <a href="https://x.com/AriantheChain" target="_blank" rel="noopener" style={{fontSize:12,color:'#E87B3E',fontWeight:500,textDecoration:'none'}}>@AriantheChain</a>
+      </div>
+
     </div>
   );
 }
