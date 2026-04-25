@@ -1451,7 +1451,7 @@ const COLORS = {
   borderSubtle:    '#16181E',
 
   text:            '#F0F4FC',
-  textDim:         '#A0AAC2',
+  textDim:         '#9B9A95',
   textMute:        '#6B6F78',
 
   accent:          '#E87B3E',
