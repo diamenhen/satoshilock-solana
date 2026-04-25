@@ -1477,7 +1477,7 @@ const S = {
   },
 
   navbar: { width:'100%', background:COLORS.navBg, position:'sticky', top:0, zIndex:10 },
-  navInner: { maxWidth:1280, margin:'0 auto', padding:'14px 28px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:20 },
+  navInner: { padding:'14px 28px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:20 },
   brand: { display:'flex', alignItems:'center', gap:10, cursor:'pointer' },
   brandName: { fontSize:17, fontWeight:800, color:COLORS.accent, letterSpacing:'-0.01em' },
   navSearch: { position:'relative', width:'100%', maxWidth:460, justifySelf:'center' },
