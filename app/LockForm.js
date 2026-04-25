@@ -749,22 +749,7 @@ export default function LockForm() {
             <div style={S.brandName}>SatoshiLock</div>
           </div>
 
-          <div style={S.navSearch}>
-            <div style={S.navSearchIcon}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            </div>
-            <input style={S.navSearchInput} placeholder="Search tokens or wallet"
-              onFocus={()=>{ setShowTokenPicker(true); setTab('create'); }} />
-          </div>
-
           <div style={S.navRight}>
-            <div style={S.priority}>
-              <span style={{color:COLORS.textDim}}>Priority:</span>
-              <span style={{color:COLORS.text,fontWeight:600}}>Fast</span>
-            </div>
-            <button style={S.gearBtn} title="Settings">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            </button>
             {!connected
               ? <button style={S.connectBtn} onClick={()=>setWalletModalVisible(true)}>Connect wallet</button>
               : (
@@ -783,7 +768,7 @@ export default function LockForm() {
             ['about','About'],
             ['locked','Your locked tokens'],
             ['streams','Locks you created'],
-            ['create','+ Create lock'],
+            ['create','Create lock'],
           ].map(([k,l]) => (
             <button key={k} onClick={()=>setTab(k)}
               style={{...S.navTab, ...(tab===k?S.navTabActive:{})}}>
@@ -1213,17 +1198,6 @@ function AboutPanel({ onCreate, onLocked }) {
       <div style={{position:'absolute',top:24,right:24,width:28,height:28,borderTop:'3px solid #E87B3E',borderRight:'3px solid #E87B3E'}} aria-hidden />
       <div style={{position:'absolute',bottom:24,left:24,width:28,height:28,borderBottom:'3px solid #E87B3E',borderLeft:'3px solid #E87B3E'}} aria-hidden />
       <div style={{position:'absolute',bottom:24,right:24,width:28,height:28,borderBottom:'3px solid #E87B3E',borderRight:'3px solid #E87B3E'}} aria-hidden />
-
-      {/* Version ID */}
-      <div style={{fontFamily:'"JetBrains Mono", Consolas, monospace',fontSize:11,color:'#E87B3E',letterSpacing:'0.25em',marginBottom:24}}>
-        SLK://SOLANA/MAINNET/LIVE
-      </div>
-
-      {/* Lock icon */}
-      <div style={{display:'inline-block',filter:'drop-shadow(0 0 50px rgba(125,211,252,0.3))',marginBottom:32}}>
-        <LockLogo size={72} />
-      </div>
-
       {/* Heading */}
       <h1 style={{fontSize:'clamp(42px, 7vw, 80px)',fontWeight:800,letterSpacing:'-0.03em',lineHeight:1.04,margin:'0 0 22px'}}>
         <span style={{background:'linear-gradient(135deg, #F4A460 0%, #E87B3E 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'}}>Token vesting,</span>
@@ -1467,8 +1441,8 @@ function LocksTable({ title, rows, getStats, onClaim, claimLoading, role, public
 
 // ══════════ Colors & Styles ══════════
 const COLORS = {
-  bg:              '#0B0E17',
-  navBg:           '#0F1320',
+  bg:              '#0B0C10',
+  navBg:           '#0B0C10',
   cardBg:          '#141824',
   cardBgDarker:    '#0F131F',
   cardBgElevated:  '#1C2235',
@@ -1502,10 +1476,10 @@ const S = {
     display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative',
   },
 
-  navbar: { width:'100%', background:COLORS.navBg, borderBottom:`1px solid ${COLORS.borderSubtle}`, position:'sticky', top:0, zIndex:10 },
-  navInner: { maxWidth:1280, margin:'0 auto', padding:'14px 28px', display:'grid', gridTemplateColumns:'1fr 1fr 1fr', alignItems:'center', gap:20 },
+  navbar: { width:'100%', background:COLORS.navBg, position:'sticky', top:0, zIndex:10 },
+  navInner: { maxWidth:1280, margin:'0 auto', padding:'14px 28px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:20 },
   brand: { display:'flex', alignItems:'center', gap:10, cursor:'pointer' },
-  brandName: { fontSize:17, fontWeight:800, color:COLORS.text, letterSpacing:'-0.01em' },
+  brandName: { fontSize:17, fontWeight:800, color:COLORS.accent, letterSpacing:'-0.01em' },
   navSearch: { position:'relative', width:'100%', maxWidth:460, justifySelf:'center' },
   navSearchIcon: { position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', color:COLORS.textMute, pointerEvents:'none' },
   navSearchInput: { width:'100%', background:COLORS.cardBgDarker, border:`1px solid ${COLORS.border}`, borderRadius:999, padding:'8px 14px 8px 38px', color:COLORS.text, fontSize:13, outline:'none', boxSizing:'border-box', fontFamily:'inherit' },
@@ -1517,8 +1491,8 @@ const S = {
   walletDot: { width:16, height:16, borderRadius:'50%', background:`linear-gradient(135deg, ${COLORS.cyan}, ${COLORS.accent})` },
 
   navTabs: { maxWidth:1280, margin:'0 auto', padding:'0 28px', display:'flex', alignItems:'center', gap:26, justifyContent:'center' },
-  navTab: { background:'none', border:'none', color:COLORS.textDim, padding:'12px 0', fontSize:13, fontWeight:500, cursor:'pointer', borderBottom:'2px solid transparent', fontFamily:'inherit' },
-  navTabActive: { color:COLORS.accent, borderBottomColor:COLORS.accent, fontWeight:600 },
+  navTab: { background:'none', border:'none', outline:'none', color:COLORS.textDim, padding:'12px 0', fontSize:13, fontWeight:500, cursor:'pointer', borderBottom:'2px solid rgba(0,0,0,0)', fontFamily:'inherit' },
+  navTabActive: { color:COLORS.accent, borderBottom:'2px solid #E87B3E', fontWeight:600 },
 
   alertToast: { position:'fixed', bottom:28, left:28, zIndex:50, display:'flex', gap:12, alignItems:'flex-start', padding:'12px 16px', background:COLORS.cardBg, border:`1px solid ${COLORS.border}`, borderLeftWidth:3, borderRadius:8, minWidth:260, maxWidth:340, animation:'slideDown 0.25s ease' },
   alertIcon: { width:22, height:22, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:800, flexShrink:0 },
