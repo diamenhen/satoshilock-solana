@@ -1,15 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <defs>
-    <linearGradient id="lockG" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#7dd3ff"/>
-      <stop offset="1" stop-color="#c2f160"/>
-    </linearGradient>
-  </defs>
-  <rect width="32" height="32" rx="7" fill="#0B0E17"/>
-  <circle cx="16" cy="16" r="12" stroke="#1F2840" stroke-width="2.4" fill="none"/>
-  <circle cx="16" cy="16" r="12" stroke="url(#lockG)" stroke-width="2.4" fill="none"
-    stroke-dasharray="75.4" stroke-dashoffset="12"
-    transform="rotate(-90 16 16)" stroke-linecap="round"/>
-  <circle cx="16" cy="14" r="1.8" fill="url(#lockG)"/>
-  <path d="M14.8 15.5 L17.2 15.5 L17.8 20.5 L14.2 20.5 Z" fill="url(#lockG)"/>
+  <rect width="32" height="32" fill="#0B0C10"/>
+  <rect x="3" y="3" width="26" height="26" stroke="#E87B3E" stroke-width="2.4" fill="none"/>
+  <text x="16" y="25" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="22" font-weight="900" font-style="italic" fill="#E87B3E">S</text>
 </svg>
