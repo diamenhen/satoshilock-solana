@@ -1204,9 +1204,9 @@ function AboutPanel({ onCreate }) {
         <div style={{position:'absolute',inset:-20,background:COLORS.accent,opacity:0.08,borderRadius:'50%',filter:'blur(30px)',pointerEvents:'none'}}/>
         <div style={{position:'relative'}}><LockLogo size={96} /></div>
       </div>
-      <div style={{fontFamily:'"Arial Black", Inter, sans-serif',fontSize:48,fontWeight:900,letterSpacing:'-0.04em',color:COLORS.text,marginBottom:6,textTransform:'uppercase'}}>SATOSHI<span style={{color:'#E87B3E',fontStyle:'italic'}}>LOCK</span</div>
+      <div style={{fontFamily:'Inter',fontSize:44,fontWeight:800,letterSpacing:'-0.025em',color:COLORS.text,marginBottom:10}}>SatoshiLock</div>
       <div style={{fontSize:14,color:COLORS.textDim,lineHeight:1.65,marginBottom:24,maxWidth:440,margin:'0 auto 24px'}}>
-        Onchain token vesting on Solana. Forged for those who demand finality.
+        Lock and distribute tokens over time on Solana. Open source, audited, non-custodial.
       </div>
 
       <div style={{display:'flex',justifyContent:'center',gap:8,marginBottom:28,flexWrap:'wrap'}}>
@@ -1215,7 +1215,7 @@ function AboutPanel({ onCreate }) {
         <FeatureChip dot={COLORS.amber} label="Zero platform fees" />
       </div>
 
-      <button style={{...S.primaryCta, width:'auto', padding:'11px 26px', margin:'0 auto'}} onClick={onCreate}>DEPLOY LOCK</button>
+      <button style={{...S.primaryCta, width:'auto', padding:'11px 26px', margin:'0 auto'}} onClick={onCreate}>Create lock</button>
     </div>
   );
 }
@@ -1395,7 +1395,7 @@ function LocksTable({ title, rows, getStats, onClaim, claimLoading, role, public
           <div style={{fontSize:12,color:COLORS.textMute,marginBottom:22,maxWidth:320,margin:'0 auto 22px'}}>
             {role==='recipient' ? 'When someone locks tokens for you, they will appear here.' : 'Vest tokens to teammates, investors, or yourself — all on-chain.'}
           </div>
-          <button style={{...S.primaryCta, width:'auto', padding:'10px 22px', margin:'0 auto'}} onClick={onCreate}>DEPLOY LOCK</button>
+          <button style={{...S.primaryCta, width:'auto', padding:'10px 22px', margin:'0 auto'}} onClick={onCreate}>Create lock</button>
         </div>
       )}
 
@@ -1514,7 +1514,7 @@ const S = {
 
   addAnother: { background:'none', border:'none', color:COLORS.accent, fontSize:12, fontWeight:600, padding:'16px 0', cursor:'pointer', fontFamily:'inherit' },
 
-  primaryCta:{width:'100%',background:'#E87B3E',border:'none',borderRadius:0,padding:'14px 22px',color:'#000',fontSize:13,fontWeight:900,cursor:'pointer',fontFamily:'JetBrains Mono, Consolas, monospace',display:'flex',alignItems:'center',justifyContent:'center',gap:8,textTransform:'uppercase',letterSpacing:'0.15em'}, ${COLORS.accentDark})`, border:'none', borderRadius:8, padding:'13px 20px', color:COLORS.bg, fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'inherit', display:'flex', alignItems:'center', justifyContent:'center', gap:8, boxShadow:`0 0 24px rgba(232, 123, 62,0.14)`, transition:'all 0.15s' },
+  primaryCta: { width:'100%', background:`linear-gradient(180deg, ${COLORS.accent}, ${COLORS.accentDark})`, border:'none', borderRadius:8, padding:'13px 20px', color:COLORS.bg, fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'inherit', display:'flex', alignItems:'center', justifyContent:'center', gap:8, boxShadow:`0 0 24px rgba(232, 123, 62,0.14)`, transition:'all 0.15s' },
   primaryCtaDisabled: { background:COLORS.cardBgElevated, color:COLORS.textMute, cursor:'not-allowed', boxShadow:'none' },
   spinner: { width:12, height:12, border:'2px solid rgba(0,0,0,0.3)', borderTopColor:COLORS.bg, borderRadius:'50%', animation:'spin 0.7s linear infinite' },
 
