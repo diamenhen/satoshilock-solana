@@ -745,7 +745,7 @@ export default function LockForm() {
       <div style={S.navbar}>
         <div style={S.navInner}>
           <div style={S.brand} onClick={()=>setTab('about')}>
-            <LockLogo size={28} />
+            <MonogramS size={28} />
             <div style={S.brandName}>SatoshiLock</div>
           </div>
 
@@ -1109,6 +1109,14 @@ function LockLogo({ size=28 }) {
     </svg>
   );
 }
+function MonogramS({ size=28 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+      <rect x="2" y="2" width="28" height="28" stroke="#E87B3E" strokeWidth="2.2" fill="none"/>
+      <text x="16" y="24" textAnchor="middle" fontFamily='"Arial Black", sans-serif' fontSize="22" fontWeight="900" fontStyle="italic" fill="#E87B3E">S</text>
+    </svg>
+  );
+}
 function ChevronDown() {
   return <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{color:COLORS.textMute}}><path d="m6 9 6 6 6-6"/></svg>;
 }
@@ -1204,7 +1212,7 @@ function AboutPanel({ onCreate }) {
         <div style={{position:'absolute',inset:-20,background:COLORS.accent,opacity:0.08,borderRadius:'50%',filter:'blur(30px)',pointerEvents:'none'}}/>
         <div style={{position:'relative'}}><LockLogo size={96} /></div>
       </div>
-      <div style={{fontFamily:'"Arial Black", Inter, sans-serif',fontSize:48,fontWeight:900,letterSpacing:'-0.04em',color:COLORS.text,marginBottom:6,textTransform:'uppercase'}}>SATOSHI<span style={{color:'#E87B3E',fontStyle:'italic'}}>LOCK</span</div>
+      <div style={{fontFamily:'"Arial Black", Inter, sans-serif',fontSize:48,fontWeight:900,letterSpacing:'-0.04em',color:COLORS.text,marginBottom:6,textTransform:'uppercase'}}>SATOSHI<span style={{color:'#E87B3E',fontStyle:'italic'}}>LOCK</span></div>
       <div style={{fontSize:14,color:COLORS.textDim,lineHeight:1.65,marginBottom:24,maxWidth:440,margin:'0 auto 24px'}}>
         Onchain token vesting on Solana. Forged for those who demand finality.
       </div>
@@ -1514,7 +1522,7 @@ const S = {
 
   addAnother: { background:'none', border:'none', color:COLORS.accent, fontSize:12, fontWeight:600, padding:'16px 0', cursor:'pointer', fontFamily:'inherit' },
 
-  primaryCta:{width:'100%',background:'#E87B3E',border:'none',borderRadius:0,padding:'14px 22px',color:'#000',fontSize:13,fontWeight:900,cursor:'pointer',fontFamily:'JetBrains Mono, Consolas, monospace',display:'flex',alignItems:'center',justifyContent:'center',gap:8,textTransform:'uppercase',letterSpacing:'0.15em'}, ${COLORS.accentDark})`, border:'none', borderRadius:8, padding:'13px 20px', color:COLORS.bg, fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'inherit', display:'flex', alignItems:'center', justifyContent:'center', gap:8, boxShadow:`0 0 24px rgba(232, 123, 62,0.14)`, transition:'all 0.15s' },
+  primaryCta:{width:'100%',background:'#E87B3E',border:'none',borderRadius:0,padding:'14px 22px',color:'#000',fontSize:13,fontWeight:900,cursor:'pointer',fontFamily:'JetBrains Mono, Consolas, monospace',display:'flex',alignItems:'center',justifyContent:'center',gap:8,textTransform:'uppercase',letterSpacing:'0.15em'},
   primaryCtaDisabled: { background:COLORS.cardBgElevated, color:COLORS.textMute, cursor:'not-allowed', boxShadow:'none' },
   spinner: { width:12, height:12, border:'2px solid rgba(0,0,0,0.3)', borderTopColor:COLORS.bg, borderRadius:'50%', animation:'spin 0.7s linear infinite' },
 
