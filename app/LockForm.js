@@ -230,6 +230,23 @@ export default function LockForm() {
 
   const [tab,  setTab]  = useState('about');
   const [now,  setNow]  = useState(Date.now()/1000);
+  const [solPriceUsd, setSolPriceUsd] = useState(null);
+
+  // Fetch SOL price from Jupiter Price API every 60s
+  useEffect(() => {
+    let mounted = true;
+    const fetchPrice = async () => {
+      try {
+        const res = await fetch('https://lite-api.jup.ag/price/v2?ids=So11111111111111111111111111111111111111112');
+        const data = await res.json();
+        const price = parseFloat(data?.data?.['So11111111111111111111111111111111111111112']?.price);
+        if (mounted && price > 0) setSolPriceUsd(price);
+      } catch {}
+    };
+    fetchPrice();
+    const t = setInterval(fetchPrice, 60000);
+    return () => { mounted = false; clearInterval(t); };
+  }, []);
 
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()/1000), 1000);
@@ -693,6 +710,22 @@ export default function LockForm() {
     return { vested, claimable, pctUnlocked, pctClaimed, isLive, isDone, nextUnlock };
   }
 
+  // Compute total active SOL/wSOL locked (received side, status not complete)
+  const solWorthStats = useMemo(() => {
+    if (!publicKey) return { totalSol: 0, totalUsd: 0, count: 0 };
+    let totalSol = 0;
+    let count = 0;
+    streams.forEach(s => {
+      if (s.recipient !== publicKey.toString()) return;
+      if (s.mintAddress !== WSOL_MINT) return;
+      const remaining = Math.max(0, s.amt - (s.withdrawn || 0));
+      if (remaining <= 0.000001) return;
+      totalSol += remaining;
+      count++;
+    });
+    return { totalSol, totalUsd: totalSol * (solPriceUsd || 0), count };
+  }, [streams, publicKey, now, solPriceUsd]);
+
   const receivedStreams = streams.filter(s => publicKey && s.recipient === publicKey.toString());
   const createdStreams  = streams.filter(s => publicKey && s.sender    === publicKey.toString());
 
@@ -762,6 +795,24 @@ export default function LockForm() {
             }
           </div>
         </div>
+
+        {/* SOL Worth Banner */}
+        {publicKey && solWorthStats.count > 0 && (
+          <div style={S.solWorthBanner}>
+            <div style={S.solWorthInner}>
+              <span style={S.solWorthLabel}>Total SOL Locked</span>
+              <span style={S.solWorthSep}>Â·</span>
+              <span style={S.solWorthSol}>{numFmt(solWorthStats.totalSol, 4)} SOL</span>
+              {solWorthStats.totalUsd > 0 && (
+                <>
+                  <span style={S.solWorthSep}>Â·</span>
+                  <span style={S.solWorthUsd}>${numFmt(solWorthStats.totalUsd, 2)}</span>
+                </>
+              )}
+              <span style={S.solWorthCount}>{solWorthStats.count} active lock{solWorthStats.count !== 1 ? 's' : ''}</span>
+            </div>
+          </div>
+        )}
 
         <div style={S.navTabs}>
           {[
@@ -1514,6 +1565,14 @@ const S = {
   connectBtn: { background:'transparent', border:`1px solid ${COLORS.accent}`, color:COLORS.accent, padding:'7px 16px', borderRadius:999, fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', transition:'all 0.2s' },
   walletPill: { display:'flex', alignItems:'center', gap:6, background:COLORS.cardBgDarker, border:`1px solid ${COLORS.border}`, borderRadius:999, padding:'7px 12px', color:COLORS.text, fontSize:12, fontWeight:600, cursor:'pointer', fontFamily:'inherit' },
   walletDot: { width:16, height:16, borderRadius:'50%', background:`linear-gradient(135deg, ${COLORS.cyan}, ${COLORS.accent})` },
+
+  solWorthBanner: { width:'100%', maxWidth:1280, margin:'0 auto', padding:'10px 28px 0' },
+  solWorthInner: { display:'flex', alignItems:'center', gap:10, padding:'10px 16px', background:'rgba(194,241,96,0.06)', border:'1px solid rgba(194,241,96,0.18)', borderRadius:8, fontSize:12, flexWrap:'wrap' },
+  solWorthLabel: { color:'#9aa5b8', fontFamily:'monospace', fontSize:11, letterSpacing:'0.06em', textTransform:'uppercase' },
+  solWorthSep: { color:'#3a4258' },
+  solWorthSol: { color:'#c2f160', fontWeight:700, fontSize:13 },
+  solWorthUsd: { color:'#e8edf7', fontWeight:600, fontSize:12 },
+  solWorthCount: { marginLeft:'auto', color:'#6b7590', fontSize:11, fontFamily:'monospace' },
 
   navTabs: { maxWidth:1280, margin:'0 auto', padding:'0 28px', display:'flex', alignItems:'center', gap:26, justifyContent:'center' },
   navTab: { background:'none', border:'none', outline:'none', color:COLORS.textDim, padding:'12px 0', fontSize:13, fontWeight:500, cursor:'pointer', borderBottom:'2px solid rgba(0,0,0,0)', fontFamily:'inherit' },
