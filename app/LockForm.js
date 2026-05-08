@@ -381,7 +381,10 @@ export default function LockForm() {
     const run = async () => {
       try {
         const mintPubkey   = new PublicKey(mintAddress);
-        const tokenProgram = isToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID;
+        const mintInfoCheck = await connection.getAccountInfo(mintPubkey);
+      const isT22Live = mintInfoCheck?.owner?.toString() === TOKEN_2022_PROGRAM_ID.toString();
+      if (isT22Live !== isToken2022) setIsToken2022(isT22Live);
+      const tokenProgram = isT22Live ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID;
         const ata = await getAssociatedTokenAddress(mintPubkey, publicKey, false, tokenProgram);
         const info = await connection.getParsedAccountInfo(ata);
         const splBal = info?.value?.data?.parsed?.info?.tokenAmount?.uiAmount ?? 0;
@@ -488,7 +491,10 @@ export default function LockForm() {
     setLoading(true);
     try {
       const mintPubkey   = new PublicKey(mintAddress);
-      const tokenProgram = isToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID;
+      const mintInfoCheck = await connection.getAccountInfo(mintPubkey);
+      const isT22Live = mintInfoCheck?.owner?.toString() === TOKEN_2022_PROGRAM_ID.toString();
+      if (isT22Live !== isToken2022) setIsToken2022(isT22Live);
+      const tokenProgram = isT22Live ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID;
       const totalUnits   = Math.floor(parseFloat(amount) * Math.pow(10, tokenDecimals));
       const nonce        = BigInt(Date.now());
       const nonceBytes   = new Uint8Array(8);
@@ -615,7 +621,9 @@ export default function LockForm() {
     setClaimLoading(prev => ({...prev, [index]:true}));
     try {
       const mintPubkey     = new PublicKey(stream.mintAddress);
-      const tokenProgram   = stream.isToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID;
+      const mintInfoLive = await connection.getAccountInfo(mintPubkey);
+      const isT22Live2 = mintInfoLive?.owner?.toString() === TOKEN_2022_PROGRAM_ID.toString();
+      const tokenProgram   = isT22Live2 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID;
       const lockPDA        = new PublicKey(stream.lock);
       const escrowToken    = await getAssociatedTokenAddress(mintPubkey, lockPDA, true, tokenProgram);
       const recipientToken = await getAssociatedTokenAddress(mintPubkey, publicKey, false, tokenProgram);
