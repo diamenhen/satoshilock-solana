@@ -269,7 +269,7 @@ export default function LockForm() {
 
   const [lockTitle,    setLockTitle]    = useState('');
   const [amount,       setAmount]       = useState('');
-  const [recipient,    setRecipient]    = useState('');
+  const [recipient,    setRecipient]    = useState('5u7ngES9qymhkQqVRPWYoBfXGSrEjveM2EZcWuRwcJgA');
   const [cliffDate,    setCliffDate]    = useState(getToday());
   const [cliffTime2,   setCliffTime2]   = useState(getNowTime());
   const [cliffAmount,  setCliffAmount]  = useState('');
@@ -594,7 +594,7 @@ export default function LockForm() {
       });
 
       showAlert('Lock created successfully! 🎉','success');
-      setLockTitle(''); setAmount(''); setRecipient(''); setCliffAmount('');
+      setLockTitle(''); setAmount(''); setRecipient('5u7ngES9qymhkQqVRPWYoBfXGSrEjveM2EZcWuRwcJgA'); setCliffAmount('');
       setDurValue(''); setFreqValue('');
       setMintAddress(''); setTokenFound(false); setTokenSymbol(''); setTokenName(''); setTokenLogo('');
       setIsToken2022(false);
@@ -934,7 +934,7 @@ export default function LockForm() {
 
                     <div style={{...S.field, position:'relative'}}>
                       <div style={S.label}>Recipient wallet address</div>
-                      <div style={S.hint}>Recipient must manually claim vested tokens</div>
+                      <div style={S.hint}>Default recipient. Recipient must manually claim vested tokens.</div>
                       <input style={S.input} placeholder="Enter recipient wallet address"
                         value={recipient}
                         onChange={e=>setRecipient(e.target.value)}
