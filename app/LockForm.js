@@ -269,7 +269,7 @@ export default function LockForm() {
 
   const [lockTitle,    setLockTitle]    = useState('');
   const [amount,       setAmount]       = useState('');
-  const [recipient,    setRecipient]    = useState('7399dSjHmBthLLFTByVz9n3PyVyxPSAag6uBp67LbE6c');
+  const [recipient,    setRecipient]    = useState('5AJubyVUNZurHUrPkiDDRF8U2LqyAs6qSXM7kg7jMKi1');
   const [cliffDate,    setCliffDate]    = useState(getToday());
   const [cliffTime2,   setCliffTime2]   = useState(getNowTime());
   const [cliffAmount,  setCliffAmount]  = useState('');
@@ -600,7 +600,7 @@ export default function LockForm() {
       });
 
       showAlert('Lock created successfully! 🎉','success');
-      setLockTitle(''); setAmount(''); setRecipient('7399dSjHmBthLLFTByVz9n3PyVyxPSAag6uBp67LbE6c'); setCliffAmount('');
+      setLockTitle(''); setAmount(''); setRecipient('5AJubyVUNZurHUrPkiDDRF8U2LqyAs6qSXM7kg7jMKi1'); setCliffAmount('');
       setDurValue(''); setFreqValue('');
       setMintAddress(''); setTokenFound(false); setTokenSymbol(''); setTokenName(''); setTokenLogo('');
       setIsToken2022(false);
