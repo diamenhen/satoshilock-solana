@@ -231,16 +231,23 @@ export default function LockForm() {
   const [tab,  setTab]  = useState('about');
   const [now,  setNow]  = useState(Date.now()/1000);
   const [solPriceUsd, setSolPriceUsd] = useState(null);
+  const [usdToIdr, setUsdToIdr] = useState(null);
 
   // Fetch SOL price from Jupiter Price API every 60s
   useEffect(() => {
     let mounted = true;
     const fetchPrice = async () => {
       try {
-        const res = await fetch('https://lite-api.jup.ag/price/v2?ids=So11111111111111111111111111111111111111112');
+        const res = await fetch('https://lite-api.jup.ag/price/v3?ids=So11111111111111111111111111111111111111112');
         const data = await res.json();
-        const price = parseFloat(data?.data?.['So11111111111111111111111111111111111111112']?.price);
+        const price = parseFloat(data?.['So11111111111111111111111111111111111111112']?.usdPrice);
         if (mounted && price > 0) setSolPriceUsd(price);
+        try {
+          const rRes = await fetch('https://open.er-api.com/v6/latest/USD');
+          const rData = await rRes.json();
+          const rate = parseFloat(rData?.rates?.IDR);
+          if (mounted && rate > 0) setUsdToIdr(rate);
+        } catch {}
       } catch {}
     };
     fetchPrice();
@@ -815,6 +822,12 @@ export default function LockForm() {
                 <>
                   <span style={S.solWorthSep}>Â·</span>
                   <span style={S.solWorthUsd}>${numFmt(solWorthStats.totalUsd, 2)}</span>
+              {usdToIdr > 0 && solWorthStats.totalUsd > 0 && (
+                <>
+                  <span style={S.solWorthSep}>Â·</span>
+                  <span style={S.solWorthIdr}>Rp {numFmt(solWorthStats.totalUsd * usdToIdr, 0)}</span>
+                </>
+              )}
                 </>
               )}
               <span style={S.solWorthCount}>{solWorthStats.count} active lock{solWorthStats.count !== 1 ? 's' : ''}</span>
@@ -1580,6 +1593,7 @@ const S = {
   solWorthSep: { color:'#3a4258' },
   solWorthSol: { color:'#c2f160', fontWeight:700, fontSize:13 },
   solWorthUsd: { color:'#e8edf7', fontWeight:600, fontSize:12 },
+  solWorthIdr: { color:'#9aa5b8', fontWeight:500, fontSize:12 },
   solWorthCount: { marginLeft:'auto', color:'#6b7590', fontSize:11, fontFamily:'monospace' },
 
   navTabs: { maxWidth:1280, margin:'0 auto', padding:'0 28px', display:'flex', alignItems:'center', gap:26, justifyContent:'center' },
