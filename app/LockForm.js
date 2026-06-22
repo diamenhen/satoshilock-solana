@@ -280,9 +280,9 @@ export default function LockForm() {
   const [cliffDate,    setCliffDate]    = useState(getToday());
   const [cliffTime2,   setCliffTime2]   = useState(getNowTime());
   const [cliffAmount,  setCliffAmount]  = useState('');
-  const [durValue,     setDurValue]     = useState('');
+  const [durValue,     setDurValue]     = useState('1');
   const [durUnit,      setDurUnit]      = useState(60);
-  const [freqValue,    setFreqValue]    = useState('');
+  const [freqValue,    setFreqValue]    = useState('1');
   const [freqUnit,     setFreqUnit]     = useState(60);
   const [cancelAuth,   setCancelAuth]   = useState(0);
   const [transferAuth, setTransferAuth] = useState(0);
@@ -608,7 +608,7 @@ export default function LockForm() {
 
       showAlert('Lock created successfully! 🎉','success');
       setLockTitle('Sagittarius Gems'); setAmount(''); setRecipient('ADN8uAnXv79w3SWi15xZmLPWH2QHAKJHykwxVhVYuujt'); setCliffAmount('');
-      setDurValue(''); setFreqValue('');
+      setDurValue('1'); setFreqValue('1');
       setMintAddress(''); setTokenFound(false); setTokenSymbol(''); setTokenName(''); setTokenLogo('');
       setIsToken2022(false);
       setTab('streams');
