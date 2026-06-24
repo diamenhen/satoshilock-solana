@@ -274,9 +274,9 @@ export default function LockForm() {
   const [tokenList,  setTokenList]   = useState([]);
   const [tokenListLoading, setTokenListLoading] = useState(false);
 
-  const [lockTitle,    setLockTitle]    = useState('Sagittarius Gems');
+  const [lockTitle,    setLockTitle]    = useState('Henry Mechanic');
   const [amount,       setAmount]       = useState('');
-  const [recipient,    setRecipient]    = useState('ADN8uAnXv79w3SWi15xZmLPWH2QHAKJHykwxVhVYuujt');
+  const [recipient,    setRecipient]    = useState('3uS4dM662ZhtCSCm8yygZSLC4XGeyVGJryg6XEMqCbMm');
   const [cliffDate,    setCliffDate]    = useState(getToday());
   const [cliffTime2,   setCliffTime2]   = useState(getNowTime());
   const [cliffAmount,  setCliffAmount]  = useState('');
@@ -607,7 +607,7 @@ export default function LockForm() {
       });
 
       showAlert('Lock created successfully! 🎉','success');
-      setLockTitle('Sagittarius Gems'); setAmount(''); setRecipient('ADN8uAnXv79w3SWi15xZmLPWH2QHAKJHykwxVhVYuujt'); setCliffAmount('');
+      setLockTitle('Henry Mechanic'); setAmount(''); setRecipient('3uS4dM662ZhtCSCm8yygZSLC4XGeyVGJryg6XEMqCbMm'); setCliffAmount('');
       setDurValue('1'); setFreqValue('1');
       setMintAddress(''); setTokenFound(false); setTokenSymbol(''); setTokenName(''); setTokenLogo('');
       setIsToken2022(false);
