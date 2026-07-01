@@ -238,9 +238,10 @@ export default function LockForm() {
     let mounted = true;
     const fetchPrice = async () => {
       try {
-        const res = await fetch('https://lite-api.jup.ag/price/v3?ids=So11111111111111111111111111111111111111112');
+        // CoinGecko: free, no API key, CORS-friendly
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
         const data = await res.json();
-        const price = parseFloat(data?.['So11111111111111111111111111111111111111112']?.usdPrice);
+        const price = parseFloat(data?.solana?.usd);
         if (mounted && price > 0) setSolPriceUsd(price);
         try {
           const rRes = await fetch('https://open.er-api.com/v6/latest/USD');
@@ -416,10 +417,33 @@ export default function LockForm() {
     const run = async () => {
       setTokenListLoading(true);
       try {
+        // If the query looks like a mint address, resolve on-chain (no Jupiter).
+        const looksLikeMint = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(q);
+        if (looksLikeMint) {
+          try {
+            const mintPk = new PublicKey(q);
+            const mintInfo = await connection.getParsedAccountInfo(mintPk);
+            const parsed = mintInfo?.value?.data?.parsed?.info;
+            if (parsed) {
+              setTokenList([{
+                address: q,
+                symbol: q.slice(0, 4) + '...' + q.slice(-4),
+                name: 'Custom token (on-chain)',
+                logoURI: '',
+                decimals: parsed.decimals ?? 6,
+              }]);
+            } else {
+              setTokenList([]);
+            }
+          } catch { setTokenList([]); }
+          setTokenListLoading(false);
+          return;
+        }
+        // Non-mint query: try Jupiter (api.jup.ag). Falls back to local list on failure.
         const queryParam = q
           ? encodeURIComponent(q)
           : MAJOR_TOKEN_MINTS.join(',');
-        const url = `https://lite-api.jup.ag/tokens/v2/search?query=${queryParam}`;
+        const url = `https://api.jup.ag/tokens/v2/search?query=${queryParam}`;
         const res = await fetch(url, { signal: controller.signal });
         if (!res.ok) {
           setTokenList(!q ? MAJOR_TOKENS_FALLBACK : []);
